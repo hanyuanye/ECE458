@@ -1,39 +1,52 @@
 s = "agpygmqgxyxfiuimypmvcmssvuiyjcggxripiuxyjrlkwdivxkwtyqxtexhmquxejdjtswxfikrdiprgxdlcgqpyvmjcrsqypumcfwrqqoelwcqkxritspgfepgomrhgtorbwqrwelcesxwghgvkxgspwlyrmpxrikelsbmrcqjmeqiuxorbwvszvmxggdxficrsqyphvyqbepkovzctixhcvkrqmrpgwcgmrutsgsswwziplctcmrqccliqekhdlyxkjmsjstmxkgwoesrjcrvyxcgvmfirlgvosskjxdszidydjcadvskfxncmsjstinelmoevwrlgvoepijsgititryxyjgameqiumxafmelfmtmfgypmvuebirlgqcijzgwzvmxggdmtivloogrijswfitmdwcphxrsskjwyfpmildpwgqpyvchkwlclsoikrqicwixmwgidlcfnyolyvosxmxiuasxfxjigeritexhrlgfsvbeumdhyvvwkpmrixriqxtikqjsqocejqqwdpgogeppywjspwsrnmqlrhgwovrepmwejwcvokcrgvkpjcvlogmpqvyjrlghowcvvxryqjqvsrqxcrmirlgpsslxjikrrinsziyrfxriumnhnslogckvcenpcelhesvspifmxhcifwkcqgcryrrvkwdvyqkrdlchgwovrajibilikxripxtiowzvwwramsfryvczgrerbynedmmrqjdlcwwvpeaicjpsphvlowjmildiqxrvyxcgvmyrrskxcjmiuewsbmhmmermqryjasnsbeqwkqspyxghdsrlcxyjrlgwevpswrnmlkeserrvamcezwqpexcparogcwuebcfipgoagxjsexcbeizxgspxristribtjyoeqimjgzovwfkvnelhcpcsrlgjevmjcpvxfiuqkpjitqkqkenwkrbxjicogrqjkpjxjicryogwkrbpkdkvbwkwyjmrgyxmdstqcelhesvspxjixivxrssrrmuxriasnsbsdxjiwerytimerittspjetwcskiqjglggjebizvqaxxfmutbszedpiqyogwdlcgcxovnmnpkvczgrwspiesxwnmeyyyqeosxkrlgkbicrnikzcwvlkruswpnsrlgvgmqididlcgcwopcxwwcicxjixafivlovrlglkfgxuspxfikrciaxymvprltsgelcnmqlryrsxxfitmnhjiylkxuswpncmyfssjwswaovcedmqgyxgvzmjpcvglwpkooqmwvsdlcvfipilwgpowqgtikxsvgwissaqyvhdighlclmildelhnmogmreikpchdcnewwqhyxfiuimerittspjetwglcrvloqmvpmxkjmildgmqgwdlccevoinhqaxxfiuxoqmjvlojmsftvelxcrnpgiesxgceninekspkdlcxjmmofitfkkcephnvwwvmmoqephviyzgwxiyvvlokpswrnelhkxswmfxmyyqxjedylhgvcyalembgsquxkraiuxrizvqaxgmpqvbiypncliasoicenvqxogrmqrsxkmildmlhginfcetkeibxjedxfieediptkpvepwjefmlkdimskidvyalgqrmiypghdlcquivzcwqrdlcktserbephdlyxyigipitifipwkrqxfiuxkxcshxrmlkufexrlkwswlsvwyfcgcyciulkpoacqccceweueqilitevvspgxrerpcvqiaevibtgpnebwdighlclmildelhnmogmreikpchdcnewmvmcfwrqqoelwcpgewwvlogywgxrerxjiiepidvyalwqqosdxjiwwrmnpbirekrsrexjiqvcipgypmvyiwewxjixgmrepehcxjedxfijelmrshgyraicpsrexjiwwcpxicfwhccmekihmbwrephdlyxvlofpsyrmsjstmcejevibeberxkxgsp"
 
-# todo: replace when not testing
-# s="abcdefabcdefabcdef"
-
+# frequency analysis
+# count the number of occurance of each char
 def bucket(s):
-	buckets = [0] * 26
+	buckets = [0] * 26 # 26 lower case letters
 	for char in s:
 		buckets[ord(char) - ord("a")] += 1
 
 	return buckets
 
+# frequency analysis but using chunks
 def chunked_bucket(s, l):
-	buckets = [[0 for col in range(26)] for row in range(l)]
+	# generate buckets for each letter for each letter in key
+	buckets = [[0 for col in range(26)] for row in range(l)] 
 	for idx, char in enumerate(s):
-		buckets[idx % l][ord(char) - ord("a")] += 1
+		# bucket according to the modulo of the key length
+		buckets[idx % l][ord(char) - ord("a")] += 1 
 
 	return buckets
 
-
+# get the key using the chunked bucket analysis output
 def find_key(buckets):
 	shift_keys = [0] * 6
 	for idx, bucket in enumerate(buckets):
-		max_idx = bucket.index(max(bucket))
-		shift_key = max_idx - 4 if max_idx - 4 >= 0 else max_idx + 22
-		shift_keys[idx] = shift_key
-	return ''.join([chr(elem + ord('a')) for elem in shift_keys])
+		# get the max index
+		max_idx = bucket.index(max(bucket)) 
+		# determine the shift amount
+		shift_key = max_idx - 4 if max_idx - 4 >= 0 else max_idx + 22 # determine the shift amount
+		# store the computed shift for that letter
+		shift_keys[idx] = shift_key 
+	# return the shift key serialized as a string
+	return ''.join([chr(elem + ord('a')) for elem in shift_keys]) 
 
+# given encoded text, decode text using key
 def decode(cipherInput, key):
-	keyIntList = [ord(dex) for dex in key]
+	# generate new list for cipher decode
 	cipherIntList = [ord(i) for i in cipherInput]
+	
+	# generate list for key string
+	keyIntList = [ord(dex) for dex in key]
 	result = []
+	
 	for dex in range(len(cipherInput)):
+		# shift cipher text by key
 		value = (cipherIntList[dex] - keyIntList[dex % len(key)]) % 26
-		result += chr(value + ord('a'))
-	return ''.join(result)		
+		result += chr(value + ord('a')) # append to result
+	# return result serialized as string
+	return ''.join(result)
 
 def main():
 	
