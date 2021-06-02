@@ -1,5 +1,7 @@
 s = "agpygmqgxyxfiuimypmvcmssvuiyjcggxripiuxyjrlkwdivxkwtyqxtexhmquxejdjtswxfikrdiprgxdlcgqpyvmjcrsqypumcfwrqqoelwcqkxritspgfepgomrhgtorbwqrwelcesxwghgvkxgspwlyrmpxrikelsbmrcqjmeqiuxorbwvszvmxggdxficrsqyphvyqbepkovzctixhcvkrqmrpgwcgmrutsgsswwziplctcmrqccliqekhdlyxkjmsjstmxkgwoesrjcrvyxcgvmfirlgvosskjxdszidydjcadvskfxncmsjstinelmoevwrlgvoepijsgititryxyjgameqiumxafmelfmtmfgypmvuebirlgqcijzgwzvmxggdmtivloogrijswfitmdwcphxrsskjwyfpmildpwgqpyvchkwlclsoikrqicwixmwgidlcfnyolyvosxmxiuasxfxjigeritexhrlgfsvbeumdhyvvwkpmrixriqxtikqjsqocejqqwdpgogeppywjspwsrnmqlrhgwovrepmwejwcvokcrgvkpjcvlogmpqvyjrlghowcvvxryqjqvsrqxcrmirlgpsslxjikrrinsziyrfxriumnhnslogckvcenpcelhesvspifmxhcifwkcqgcryrrvkwdvyqkrdlchgwovrajibilikxripxtiowzvwwramsfryvczgrerbynedmmrqjdlcwwvpeaicjpsphvlowjmildiqxrvyxcgvmyrrskxcjmiuewsbmhmmermqryjasnsbeqwkqspyxghdsrlcxyjrlgwevpswrnmlkeserrvamcezwqpexcparogcwuebcfipgoagxjsexcbeizxgspxristribtjyoeqimjgzovwfkvnelhcpcsrlgjevmjcpvxfiuqkpjitqkqkenwkrbxjicogrqjkpjxjicryogwkrbpkdkvbwkwyjmrgyxmdstqcelhesvspxjixivxrssrrmuxriasnsbsdxjiwerytimerittspjetwcskiqjglggjebizvqaxxfmutbszedpiqyogwdlcgcxovnmnpkvczgrwspiesxwnmeyyyqeosxkrlgkbicrnikzcwvlkruswpnsrlgvgmqididlcgcwopcxwwcicxjixafivlovrlglkfgxuspxfikrciaxymvprltsgelcnmqlryrsxxfitmnhjiylkxuswpncmyfssjwswaovcedmqgyxgvzmjpcvglwpkooqmwvsdlcvfipilwgpowqgtikxsvgwissaqyvhdighlclmildelhnmogmreikpchdcnewwqhyxfiuimerittspjetwglcrvloqmvpmxkjmildgmqgwdlccevoinhqaxxfiuxoqmjvlojmsftvelxcrnpgiesxgceninekspkdlcxjmmofitfkkcephnvwwvmmoqephviyzgwxiyvvlokpswrnelhkxswmfxmyyqxjedylhgvcyalembgsquxkraiuxrizvqaxgmpqvbiypncliasoicenvqxogrmqrsxkmildmlhginfcetkeibxjedxfieediptkpvepwjefmlkdimskidvyalgqrmiypghdlcquivzcwqrdlcktserbephdlyxyigipitifipwkrqxfiuxkxcshxrmlkufexrlkwswlsvwyfcgcyciulkpoacqccceweueqilitevvspgxrerpcvqiaevibtgpnebwdighlclmildelhnmogmreikpchdcnewmvmcfwrqqoelwcpgewwvlogywgxrerxjiiepidvyalwqqosdxjiwwrmnpbirekrsrexjiqvcipgypmvyiwewxjixgmrepehcxjedxfijelmrshgyraicpsrexjiwwcpxicfwhccmekihmbwrephdlyxvlofpsyrmsjstmcejevibeberxkxgsp"
 
+# todo: replace when not testing
+# s="abcdefabcdefabcdef"
 
 def bucket(s):
 	buckets = [0] * 26
@@ -15,36 +17,49 @@ def chunked_bucket(s, l):
 
 	return buckets
 
+
 def find_key(buckets):
 	shift_keys = [0] * 6
 	for idx, bucket in enumerate(buckets):
 		max_idx = bucket.index(max(bucket))
 		shift_key = max_idx - 4 if max_idx - 4 >= 0 else max_idx + 22
 		shift_keys[idx] = shift_key
+	return ''.join([chr(elem + ord('a')) for elem in shift_keys])
 
-	return shift_keys
-
-def decode(s, keys):
-	length = len(keys)
-	decoded = ""
-	for idx, char in enumerate(s):
-		key = keys[idx%length]
-		new_int = ord(char) + key if ord(char) + key <= ord("z") else ord(char) + key - 26
-		new_char = chr(new_int)
-		decoded += new_char
-
-	return decoded
-		
+def decode(cipherInput, key):
+	keyIntList = [ord(dex) for dex in key]
+	cipherIntList = [ord(i) for i in cipherInput]
+	result = []
+	for dex in range(len(cipherInput)):
+		value = (cipherIntList[dex] - keyIntList[dex % len(key)]) % 26
+		result += chr(value + ord('a'))
+	return ''.join(result)		
 
 def main():
+	
+	print("------------frequency analyis---------------")
+	print(bucket(s))
+	print("------------frequency analyis---------------")
+	
+	print("------------chunked frequency analyis---------------")
 	buckets = chunked_bucket(s,6)
 	print(buckets)
-	maxs = list(map(lambda x: [x.index(max(x)), max(x)], buckets))
-	print(maxs)
-	keys = find_key(buckets)
-	print(keys)
-	decoded = decode(s, keys)
+	print("------------chunked frequency analyis---------------")
+	
+	# print("------------maxxes---------------")
+	# maxs = list(map(lambda x: [x.index(max(x)), max(x)], buckets))
+	# print(maxs)
+	# print("------------maxxes---------------")
+	
+	print("------------findkey---------------")
+	key = find_key(buckets)
+	print(key)
+	print("------------findkey---------------")
+
+	print("------------decode---------------")
+	decoded = decode(s, key)
 	print(decoded)
+	print("------------decode---------------")
 
 if __name__=="__main__":
 	main()
