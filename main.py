@@ -1,7 +1,19 @@
 s = "agpygmqgxyxfiuimypmvcmssvuiyjcggxripiuxyjrlkwdivxkwtyqxtexhmquxejdjtswxfikrdiprgxdlcgqpyvmjcrsqypumcfwrqqoelwcqkxritspgfepgomrhgtorbwqrwelcesxwghgvkxgspwlyrmpxrikelsbmrcqjmeqiuxorbwvszvmxggdxficrsqyphvyqbepkovzctixhcvkrqmrpgwcgmrutsgsswwziplctcmrqccliqekhdlyxkjmsjstmxkgwoesrjcrvyxcgvmfirlgvosskjxdszidydjcadvskfxncmsjstinelmoevwrlgvoepijsgititryxyjgameqiumxafmelfmtmfgypmvuebirlgqcijzgwzvmxggdmtivloogrijswfitmdwcphxrsskjwyfpmildpwgqpyvchkwlclsoikrqicwixmwgidlcfnyolyvosxmxiuasxfxjigeritexhrlgfsvbeumdhyvvwkpmrixriqxtikqjsqocejqqwdpgogeppywjspwsrnmqlrhgwovrepmwejwcvokcrgvkpjcvlogmpqvyjrlghowcvvxryqjqvsrqxcrmirlgpsslxjikrrinsziyrfxriumnhnslogckvcenpcelhesvspifmxhcifwkcqgcryrrvkwdvyqkrdlchgwovrajibilikxripxtiowzvwwramsfryvczgrerbynedmmrqjdlcwwvpeaicjpsphvlowjmildiqxrvyxcgvmyrrskxcjmiuewsbmhmmermqryjasnsbeqwkqspyxghdsrlcxyjrlgwevpswrnmlkeserrvamcezwqpexcparogcwuebcfipgoagxjsexcbeizxgspxristribtjyoeqimjgzovwfkvnelhcpcsrlgjevmjcpvxfiuqkpjitqkqkenwkrbxjicogrqjkpjxjicryogwkrbpkdkvbwkwyjmrgyxmdstqcelhesvspxjixivxrssrrmuxriasnsbsdxjiwerytimerittspjetwcskiqjglggjebizvqaxxfmutbszedpiqyogwdlcgcxovnmnpkvczgrwspiesxwnmeyyyqeosxkrlgkbicrnikzcwvlkruswpnsrlgvgmqididlcgcwopcxwwcicxjixafivlovrlglkfgxuspxfikrciaxymvprltsgelcnmqlryrsxxfitmnhjiylkxuswpncmyfssjwswaovcedmqgyxgvzmjpcvglwpkooqmwvsdlcvfipilwgpowqgtikxsvgwissaqyvhdighlclmildelhnmogmreikpchdcnewwqhyxfiuimerittspjetwglcrvloqmvpmxkjmildgmqgwdlccevoinhqaxxfiuxoqmjvlojmsftvelxcrnpgiesxgceninekspkdlcxjmmofitfkkcephnvwwvmmoqephviyzgwxiyvvlokpswrnelhkxswmfxmyyqxjedylhgvcyalembgsquxkraiuxrizvqaxgmpqvbiypncliasoicenvqxogrmqrsxkmildmlhginfcetkeibxjedxfieediptkpvepwjefmlkdimskidvyalgqrmiypghdlcquivzcwqrdlcktserbephdlyxyigipitifipwkrqxfiuxkxcshxrmlkufexrlkwswlsvwyfcgcyciulkpoacqccceweueqilitevvspgxrerpcvqiaevibtgpnebwdighlclmildelhnmogmreikpchdcnewmvmcfwrqqoelwcpgewwvlogywgxrerxjiiepidvyalwqqosdxjiwwrmnpbirekrsrexjiqvcipgypmvyiwewxjixgmrepehcxjedxfijelmrshgyraicpsrexjiwwcpxicfwhccmekihmbwrephdlyxvlofpsyrmsjstmcejevibeberxkxgsp"
 
+# helper method to pretty print an array
+def printbuckets(input):
+	for dex in range(len(input)):
+		print(chr(dex + ord('a')) + ": "+ str(input[dex]))
+
+# helper method to pretty print an array and graph it
+def printbucketsgraph(input):
+	for dex in range(len(input)):
+		''.join(['|' for i in range(input[dex])])
+		print(chr(dex + ord('a')) + ": "+ ''.join(['|' for i in range(input[dex])]) + str(input[dex]))
+
+
 # frequency analysis
-# count the number of occurance of each char
+# count the number of occurances of each char in s
 def bucket(s):
 	buckets = [0] * 26 # 26 lower case letters
 	for char in s:
@@ -10,6 +22,7 @@ def bucket(s):
 	return buckets
 
 # frequency analysis but using chunks
+# count the number of occurances of each letter in s considering the key length l
 def chunked_bucket(s, l):
 	# generate buckets for each letter for each letter in key
 	buckets = [[0 for col in range(26)] for row in range(l)] 
@@ -51,12 +64,21 @@ def decode(cipherInput, key):
 def main():
 	
 	print("------------frequency analyis---------------")
-	print(bucket(s))
+	b= bucket(s)
+	printbuckets(b)
+	
+	# printbucketsgraph(b)
 	print("------------frequency analyis---------------")
 	
 	print("------------chunked frequency analyis---------------")
 	buckets = chunked_bucket(s,6)
 	print(buckets)
+	# pretty print first chunk
+	printbucketsgraph(buckets[0])
+	# todo: uncomment if you want to pretty print all buckets
+	# for buck in buckets:
+	# 	printbuckets(buck)
+	# 	print("----")
 	print("------------chunked frequency analyis---------------")
 	
 	# print("------------maxxes---------------")
